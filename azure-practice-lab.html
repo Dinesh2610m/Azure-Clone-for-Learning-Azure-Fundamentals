@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Azure Practice Lab</title>
+<style>
+:root{--bg:#f3f2f1;--cd:#fff;--tx:#201f1e;--mu:#605e5c;--bd:#d2d0ce;--bl:#0078d4;--lk:#0067b8;--ok:#107c10;--er:#a4262c;--nv:#faf9f8;--tp:#003067}
+@media(prefers-color-scheme:dark){:root{--bg:#1b1a19;--cd:#292827;--tx:#f3f2f1;--mu:#a19f9d;--bd:#484644;--lk:#6cb8f6;--ok:#6bb700;--er:#f1707b;--nv:#252423;--tp:#0b1d33}}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font:14px "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+#app{display:grid;grid-template-rows:48px 1fr;height:100%}
+.top{background:var(--tp);color:#fff;display:flex;align-items:center;gap:14px;padding:0 14px}
+.top b{font-weight:600;white-space:nowrap}.top input{flex:1;max-width:480px;padding:6px 10px;border:1px solid #fff4;background:#fff2;color:#fff;border-radius:3px}
+.top input::placeholder{color:#fffa}.top button:first-of-type{margin-left:auto}
+.body{display:grid;grid-template-columns:200px 1fr auto;min-height:0}
+.side{background:var(--nv);border-right:1px solid var(--bd);overflow:auto;padding:8px 0}
+.side a,.menu a{display:block;padding:8px 16px;cursor:pointer;color:var(--tx)}
+.side a:hover,.menu a:hover{background:var(--bd)}.side a.on,.menu a.on{background:var(--bd);border-left:3px solid var(--bl);padding-left:13px;font-weight:600}
+.main{overflow:auto;padding:20px 28px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}h2{font-size:16px;margin:18px 0 8px}
+.sub{color:var(--mu);margin-bottom:14px}.lk{color:var(--lk);cursor:pointer}.lk:hover{text-decoration:underline}
+button{font:inherit;padding:6px 14px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:2px;cursor:pointer}
+button:hover{background:var(--bd)}button.p{background:var(--bl);border-color:var(--bl);color:#fff}button.p:hover{background:#106ebe}
+button.d{color:var(--er)}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--bl)}
+.tb{width:100%;border-collapse:collapse;background:var(--cd)}.tb th,.tb td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--bd)}
+.tb th{font-weight:600;color:var(--mu);background:var(--nv)}.tb tr.dm td{color:var(--mu)}
+.bar{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+.card{background:var(--cd);border:1px solid var(--bd);padding:14px 16px;margin-bottom:12px}
+.tiles{display:flex;gap:10px;flex-wrap:wrap}.tile{width:112px;text-align:center;padding:12px 4px;cursor:pointer;border:1px solid transparent}
+.tile:hover{border-color:var(--bd);background:var(--cd)}.tile i{font-style:normal;font-size:26px;display:block}
+.blade{display:grid;grid-template-columns:190px 1fr;gap:0;border:1px solid var(--bd);background:var(--cd);min-height:380px}
+.menu{border-right:1px solid var(--bd);background:var(--nv);padding:6px 0}.blade .in{padding:14px 18px}
+.ess{display:grid;grid-template-columns:150px 1fr;gap:6px 10px}.ess span:nth-child(odd){color:var(--mu)}
+label{display:block;margin:12px 0 4px;font-weight:600}.fi{width:100%;max-width:420px;padding:6px 8px;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:2px}
+.tabs{display:flex;gap:2px;border-bottom:1px solid var(--bd);margin-bottom:6px}.tabs a{padding:8px 16px;cursor:pointer}.tabs a.on{border-bottom:2px solid var(--bl);font-weight:600}
+.er{color:var(--er)}.ok{color:var(--ok)}.msg{padding:10px 12px;border-left:4px solid;background:var(--nv);margin:10px 0}
+.msg.e{border-color:var(--er)}.msg.s{border-color:var(--ok)}.msg.i{border-color:var(--bl)}
+.ov{position:fixed;inset:0;background:#0007;display:grid;place-items:center;z-index:5}
+.mo{background:var(--cd);width:min(480px,94vw);max-height:90vh;overflow:auto;padding:18px 22px;border:1px solid var(--bd)}
+.tp{width:340px;border-left:1px solid var(--bd);background:var(--cd);overflow:auto;padding:14px 16px}
+.tp ol{padding-left:20px}.tp li{margin:7px 0}.badge{font-size:12px;padding:1px 7px;border:1px solid var(--bd);border-radius:10px;color:var(--mu)}
+.badge.d{color:var(--ok);border-color:var(--ok)}
+.sp{display:inline-block;width:16px;height:16px;border:3px solid var(--bd);border-top-color:var(--bl);border-radius:50%;animation:s 1s linear infinite;vertical-align:-3px}
+@keyframes s{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.sp{animation:none}}
+.toast{position:fixed;top:58px;right:16px;background:var(--cd);border:1px solid var(--bd);border-left:4px solid var(--ok);padding:10px 14px;z-index:9;box-shadow:0 2px 8px #0004}
+.mc{display:flex;flex-direction:column;min-width:0;min-height:0}.mc .main{flex:1}
+.term{height:280px;background:#0c0c0c;color:#d4d4d4;font:13px Consolas,"Cascadia Mono",monospace;display:flex;flex-direction:column;border-top:3px solid var(--bl)}
+#tl{flex:1;overflow:auto;padding:8px 12px}.term pre{margin:0 0 4px;white-space:pre-wrap;word-break:break-word;font:inherit}.term pre.e{color:#f48771}
+.term pre.c span,.tin span{color:#6ccb5f}.tin{display:flex;gap:8px;padding:6px 12px;border-top:1px solid #333}.tin input{flex:1;background:none;border:0;color:#fff;font:inherit;outline:0}
+@media(max-width:900px){.body{grid-template-columns:1fr}.side{display:none}.tp{width:auto;border-left:0}.blade{grid-template-columns:1fr}}
+</style></head><body><div id="app"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+let S;try{S=JSON.parse(localStorage.getItem('azlab'))}catch(e){}
+S=S||{rgs:[],res:[],done:{},task:null,steps:{},last:null};
+const save=()=>{try{localStorage.setItem('azlab',JSON.stringify(S))}catch(e){}};
+let V={p:'home'},W=null,M=null,panel=true;
+const LOC=['East US','West US 2','West Europe','Central India','South India','Southeast Asia','UK South'];
+const TY={
+ rg:{n:'Resource group',pl:'Resource groups',ic:'📦',pr:'Microsoft.Resources/resourceGroups'},
+ storage:{n:'Storage account',pl:'Storage accounts',ic:'🗄️',pr:'Microsoft.Storage/storageAccounts'},
+ nsg:{n:'Network security group',pl:'Network security groups',ic:'🛡️',pr:'Microsoft.Network/networkSecurityGroups'},
+ vnet:{n:'Virtual network',pl:'Virtual networks',ic:'🌐',pr:'Microsoft.Network/virtualNetworks'},
+ vm:{n:'Virtual machine',pl:'Virtual machines',ic:'🖥️',pr:'Microsoft.Compute/virtualMachines'}};
+const F={rg:[],nsg:[],
+ storage:[['perf','Performance','sel',['Standard','Premium']],['red','Redundancy','sel',['LRS','GRS','ZRS']],['tier','Default access tier','sel',['Hot','Cool']]],
+ vnet:[['space','IPv4 address space','txt','10.0.0.0/16'],['sn','First subnet name','txt','default'],['sp','First subnet address range','txt','10.0.0.0/24']],
+ vm:[['img','Image','sel',['Ubuntu Server 22.04 LTS','Windows Server 2022']],['size','Size','sel',['Standard_B1s','Standard_B2s','Standard_D2s_v3']],['vnet','Virtual network','vn'],['nsg','NIC network security group','ns'],['user','Administrator username','txt','azureuser']]};
+const R=(t,n,g)=>S.res.find(r=>r.t===t&&r.n===n&&r.g===g),byId=id=>S.res.find(r=>r.id===id);
+const mkRg=(n,l)=>S.rgs.push({n,l}),mkRes=(t,n,g,l,p)=>S.res.push({id:uid(),t,n,g,l,p});
+const DEF=[{n:'AllowVnetInBound',pri:65000,src:'Service Tag',sv:'VirtualNetwork',port:'*',proto:'Any',act:'Allow',d:1},
+ {n:'AllowAzureLoadBalancerInBound',pri:65001,src:'Service Tag',sv:'AzureLoadBalancer',port:'*',proto:'Any',act:'Allow',d:1},
+ {n:'DenyAllInBound',pri:65500,src:'Any',sv:'*',port:'*',proto:'Any',act:'Deny',d:1}];
+const allRules=n=>[...n.p.rules,...DEF].sort((a,b)=>a.pri-b.pri);
+function evalPort(n,port){return allRules(n).find(r=>(r.src==='Any'||(r.src==='Service Tag'&&r.sv==='Internet'))&&r.port.split(',').some(x=>{x=x.trim();if(x==='*')return 1;if(x.includes('-')){const[a,b]=x.split('-').map(Number);return port>=a&&port<=b}return+x===port}))}
+const portOk=s=>s.split(',').every(x=>/^(\*|\d{1,5}(-\d{1,5})?)$/.test(x.trim())&&x.trim().split('-').every(v=>v==='*'||+v<=65535));
+const toast=m=>{const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.append(d);setTimeout(()=>d.remove(),3500)};
+const rule=(n,pri,port,act,src='Any',sv='*')=>({n,pri,src,sv,port,proto:'TCP',act});
+const nsgP=rules=>({rules}),vmP=(nsg,vnet)=>({size:'Standard_B2s',img:'Ubuntu Server 22.04 LTS',vnet,nsg,state:'Running',user:'azureuser',ip:'20.'+(40+Math.random()*150|0)+'.'+(Math.random()*250|0)+'.'+(1+Math.random()*250|0)});
+
+/* ---------- TASKS ---------- */
+const TASKS=[
+{id:'t1',lv:'Build',ti:'Create a resource group',lab:[],sc:'Every Azure resource lives in a resource group. Create one called rg-learn in East US.',
+ st:['Use the search bar at the top, type Resource groups and open it.','Click + Create.','Subscription: keep the default. Resource group name: rg-learn. Region: East US.','Click Review + create, wait for “Validation passed”, then click Create.','Click Check my work below.'],
+ ck:()=>S.rgs.find(r=>r.n==='rg-learn'&&r.l==='East US')?[1,'rg-learn exists in East US.']:[0,'No resource group named rg-learn in East US yet.']},
+{id:'t2',lv:'Build',ti:'Store unstructured data in Blob storage',lab:[],sc:'Your app needs to keep documents. In rg-learn, create a storage account, add a private container named documents and upload one file. (Complete the first task first.)',
+ st:['Open Storage accounts → + Create.','Basics: Resource group rg-learn, Storage account name (3–24 lowercase letters/numbers, globally unique, e.g. stlearn4829), Region East US, Performance Standard, Redundancy LRS.','Review + create → Create → Go to resource.','Left menu: Data storage → Containers → + New container.','Name: documents. Anonymous access level: Private (no anonymous access). Click Create.','Open the documents container → Upload → pick any file → Upload. Nothing is really stored; the file name is only recorded.','Click Check my work.'],
+ ck:()=>{const a=S.res.find(r=>r.t==='storage'&&r.g==='rg-learn');if(!a)return[0,'No storage account in rg-learn yet.'];const c=a.p.containers.find(c=>c.n==='documents');if(!c)return[0,'Storage account found, but no container named documents.'];if(c.acc!=='private')return[0,'The documents container must be Private.'];return c.blobs.length?[1,'Container documents is private and holds '+c.blobs.length+' blob(s).']:[0,'Container is ready; upload at least one blob.']}},
+{id:'t3',lv:'Build',ti:'Create an NSG that allows HTTPS',lab:[],sc:'Create a network security group nsg-web in rg-learn (East US) that lets HTTPS (443) in from the internet.',
+ st:['Open Network security groups → + Create.','Resource group rg-learn, Name nsg-web, Region East US → Review + create → Create → Go to resource.','Settings → Inbound security rules → + Add.','Source: Any. Destination port ranges: 443. Protocol: TCP. Action: Allow. Priority: 100. Name: Allow-HTTPS. Click Add.','Click Check my work.'],
+ ck:()=>{const n=R('nsg','nsg-web','rg-learn');if(!n)return[0,'No NSG named nsg-web in rg-learn.'];return evalPort(n,443).act==='Allow'?[1,'443 is allowed from the internet.']:[0,'nsg-web exists, but inbound 443 from the internet is still denied. New NSGs block internet traffic by default.']}},
+{id:'t4',lv:'Troubleshoot',ti:'Website on vm-web-01 times out',lab:['rg-prod-web'],sc:'Users say http://vm-web-01 (port 80) times out. The VM is running and the app is healthy. Find the cause and fix it. A legacy app depends on the Block-Legacy rule, so do not delete it.',
+ seed(){mkRg('rg-prod-web','West Europe');mkRes('vnet','vnet-prod','rg-prod-web','West Europe',{space:'10.10.0.0/16',subnets:[{n:'default',pfx:'10.10.0.0/24',nsg:''}]});mkRes('nsg','nsg-web-prod','rg-prod-web','West Europe',nsgP([rule('Allow-HTTP',300,'80','Allow'),rule('Block-Legacy',200,'*','Deny')]));mkRes('vm','vm-web-01','rg-prod-web','West Europe',vmP('nsg-web-prod','vnet-prod'))},
+ st:['Virtual machines → vm-web-01 → Networking. Note which NSG is attached.','Run IP flow verify for port 80 on that page: it tells you whether traffic is allowed and which rule decides.','Open that NSG → Inbound security rules. Rules are evaluated from the lowest priority number up; the first match wins.','Click the Allow-HTTP rule and give it a lower number than the rule that blocks it (e.g. 150). Click Save.','Run IP flow verify again, then click Check my work.'],
+ ck:()=>{const n=R('nsg','nsg-web-prod','rg-prod-web');if(!n)return[0,'nsg-web-prod was deleted.'];if(!n.p.rules.find(r=>r.n==='Block-Legacy'))return[0,'Block-Legacy must stay. Fix the ordering instead of deleting it.'];return evalPort(n,80).act==='Allow'?[1,'Port 80 is now allowed. Priority order was the problem.']:[0,'Port 80 is still blocked. Use IP flow verify to see which rule decides.']}},
+{id:'t5',lv:'Security',ti:'SSH is open to the whole internet',lab:['rg-sec'],sc:'Security flagged jump-vm: anyone on the internet can reach SSH. Close this hole, but keep HTTPS (443) working.',
+ seed(){mkRg('rg-sec','Central India');mkRes('vnet','vnet-sec','rg-sec','Central India',{space:'10.20.0.0/16',subnets:[{n:'default',pfx:'10.20.0.0/24',nsg:''}]});mkRes('nsg','nsg-jump','rg-sec','Central India',nsgP([rule('Allow-SSH',100,'22','Allow'),rule('Allow-HTTPS',110,'443','Allow')]));mkRes('vm','jump-vm','rg-sec','Central India',vmP('nsg-jump','vnet-sec'))},
+ st:['Network security groups → nsg-jump → Inbound security rules.','Look at the Source column of every rule that opens port 22.','Edit Allow-SSH: Source = IP Addresses, Source IP = your office IP (e.g. 203.0.113.10). Or delete the rule if SSH is not needed. Save.','Check my work.'],
+ ck:()=>{const n=R('nsg','nsg-jump','rg-sec');if(!n)return[0,'nsg-jump was deleted.'];if(evalPort(n,22).act==='Allow')return[0,'SSH (22) is still reachable from the internet.'];return evalPort(n,443).act==='Allow'?[1,'SSH is no longer open to the internet and HTTPS still works.']:[0,'You closed SSH but also broke HTTPS (443).']}},
+{id:'t6',lv:'Security',ti:'Invoices are publicly readable',lab:['rg-data'],sc:'An auditor found that anyone with the URL can download files from the invoices container in storage account stinvoices001. Lock it down without deleting the data.',
+ seed(){mkRg('rg-data','East US');mkRes('storage','stinvoices001','rg-data','East US',{perf:'Standard',red:'LRS',tier:'Hot',anon:true,containers:[{n:'invoices',acc:'blob',blobs:[{n:'2026-01.pdf',sz:'184 KiB'},{n:'2026-02.pdf',sz:'201 KiB'}]}]})},
+ st:['Storage accounts → stinvoices001 → Data storage → Containers.','Check the Anonymous access level column.','Open invoices → Change access level → Private (no anonymous access) → OK.','Optional hardening: Settings → Configuration → Allow Blob anonymous access = Disabled → Save.','Check my work.'],
+ ck:()=>{const a=R('storage','stinvoices001','rg-data');const c=a&&a.p.containers.find(c=>c.n==='invoices');if(!c)return[0,'The invoices container is gone. Do not delete the data.'];if(!c.blobs.length)return[0,'Blobs were removed. Keep the data.'];return c.acc==='private'||!a.p.anon?[1,'Anonymous access is blocked and the blobs are intact.']:[0,'invoices still allows anonymous read access.']}}];
+const task=id=>TASKS.find(t=>t.id===id);
+function reseed(t){if(!t.seed)return;S.rgs=S.rgs.filter(r=>!t.lab.includes(r.n));S.res=S.res.filter(r=>!t.lab.includes(r.g));t.seed()}
+
+/* ---------- ACTIONS ---------- */
+const go=o=>{V=o;W=null;render()};
+const A={
+ go:d=>go({p:d.p,id:d.id,t:d.t,s:d.s||'ov',c:d.c}),
+ cr:d=>{const f={l:'East US',g:S.rgs[0]?S.rgs[0].n:'__new',n:''};F[d.t].forEach(x=>{if(x[2]==='sel')f[x[0]]=x[3][0];else if(x[2]==='txt')f[x[0]]=x[3];else f[x[0]]=''});W={t:d.t,tab:0,f,dep:null,errs:[]};V={p:'create'};render()},
+ tab:d=>{W.tab=+d.i;if(W.tab===1)W.errs=validate();render()},
+ deploy:()=>{W.errs=validate();if(W.errs.length){W.tab=1;return render()}W.tab=2;W.dep=0;render();setTimeout(()=>{finish();W.dep=1;render()},2200)},
+ goto:()=>{const r=W.made;go(W.t==='rg'?{p:'rg',id:r}:{p:'res',id:r,s:'ov'})},
+ del:d=>{const r=d.t==='rg'?null:byId(d.id),name=d.t==='rg'?d.id:r.n;M={title:'Delete '+TY[d.t].n.toLowerCase(),v:{},body:()=>`<p>Are you sure you want to delete <b>${esc(name)}</b>?${d.t==='rg'?' All resources inside it will be deleted too. Type the resource group name to confirm.':''}</p>${d.t==='rg'?'<input class="fi" data-m="c" value="'+esc(M.v.c||'')+'">':''}`,ok:'Delete',fn:()=>{if(d.t==='rg'){if(M.v.c!==name)return'The name you typed does not match.';S.rgs=S.rgs.filter(x=>x.n!==name);S.res=S.res.filter(x=>x.g!==name)}else S.res=S.res.filter(x=>x.id!==d.id);save();toast('Deleted '+name);V={p:'list',t:d.t==='rg'?'rg':d.t}}};render()},
+ mok:()=>{const e=M.fn();if(e)M.err=e;else{M=null;save()}render()},mx:()=>{M=null;render()},
+ rule:d=>{const n=byId(d.id),old=d.n?n.p.rules.find(r=>r.n===d.n):null;M={title:old?'Edit inbound security rule':'Add inbound security rule',v:old?{...old,nm:old.n,sv:old.src==='Any'?'*':old.sv}:{src:'Any',sv:'*',port:'*',proto:'Any',act:'Allow',pri:String(Math.max(100,...n.p.rules.map(r=>r.pri+10))),nm:''},
+  body:()=>{const v=M.v;return `<label>Source</label>${sel('src',['Any','IP Addresses','Service Tag'],v.src)}${v.src==='Any'?'':`<label>${v.src==='IP Addresses'?'Source IP addresses/CIDR ranges':'Source service tag'}</label><input class="fi" data-m="sv" value="${esc(v.sv==='*'?'':v.sv)}" placeholder="${v.src==='IP Addresses'?'203.0.113.10':'Internet'}">`}<label>Destination port ranges</label><input class="fi" data-m="port" value="${esc(v.port)}"><label>Protocol</label>${sel('proto',['Any','TCP','UDP'],v.proto)}<label>Action</label>${sel('act',['Allow','Deny'],v.act)}<label>Priority</label><input class="fi" data-m="pri" type="number" value="${esc(v.pri)}"><label>Name</label><input class="fi" data-m="nm" value="${esc(v.nm)}" ${old?'disabled':''}>`},
+  ok:old?'Save':'Add',fn:()=>{const v=M.v,pri=+v.pri;if(!/^[A-Za-z][\w.-]{0,79}$/.test(v.nm||''))return'Name must start with a letter and use letters, numbers, _ . or -.';if(!old&&n.p.rules.some(r=>r.n===v.nm))return'A rule with this name already exists.';if(!(pri>=100&&pri<=4096))return'Priority must be between 100 and 4096.';if(n.p.rules.some(r=>r.pri===pri&&r.n!==(old&&old.n)))return'Priority '+pri+' is already used by another rule.';if(!portOk(v.port||''))return'Enter a port (80), a range (8000-8100), a list (80,443) or *.';if(v.src!=='Any'&&!(v.sv||'').trim())return'Source value is required.';const o={n:v.nm,pri,src:v.src,sv:v.src==='Any'?'*':v.sv.trim(),port:v.port.trim(),proto:v.proto,act:v.act};if(old)Object.assign(old,o);else n.p.rules.push(o);toast((old?'Saved rule ':'Added rule ')+o.n)}};render()},
+ delrule:d=>{const n=byId(d.id);n.p.rules=n.p.rules.filter(r=>r.n!==d.n);save();toast('Deleted rule '+d.n);render()},
+ ctn:d=>{const a=byId(d.id);M={title:'New container',v:{nm:'',acc:'private'},body:()=>`<label>Name</label><input class="fi" data-m="nm" value="${esc(M.v.nm)}"><label>Anonymous access level</label><select class="fi" data-m="acc"><option value="private">Private (no anonymous access)</option><option value="blob" ${a.p.anon?'':'disabled'} ${M.v.acc==='blob'?'selected':''}>Blob (anonymous read access for blobs only)</option><option value="container" ${a.p.anon?'':'disabled'} ${M.v.acc==='container'?'selected':''}>Container (anonymous read access for containers and blobs)</option></select>${a.p.anon?'':'<div class="sub">Anonymous access is disabled on this storage account.</div>'}`,ok:'Create',fn:()=>{const n=M.v.nm;if(!/^[a-z0-9]([a-z0-9]|-(?!-)){1,61}[a-z0-9]$/.test(n))return'Name must be 3-63 chars: lowercase letters, numbers and single hyphens, starting and ending with a letter or number.';if(a.p.containers.some(c=>c.n===n))return'A container with this name already exists.';a.p.containers.push({n,acc:M.v.acc,blobs:[]});toast('Successfully created container '+n)}};render()},
+ acc:d=>{const a=byId(d.id),c=a.p.containers.find(c=>c.n===d.c);M={title:'Change access level',v:{acc:c.acc},body:()=>`<select class="fi" data-m="acc"><option value="private">Private (no anonymous access)</option><option value="blob" ${a.p.anon?'':'disabled'} ${M.v.acc==='blob'?'selected':''}>Blob</option><option value="container" ${a.p.anon?'':'disabled'} ${M.v.acc==='container'?'selected':''}>Container</option></select>`,ok:'OK',fn:()=>{c.acc=M.v.acc;toast('Access level updated')}};render()},
+ upl:d=>{const a=byId(d.id),c=a.p.containers.find(c=>c.n===d.c);M={title:'Upload blob',v:{},body:()=>`<label>Select a file</label><input type="file" id="fl" class="fi"><div class="sub">Simulation only: the file is not read or stored, just its name and size are listed.</div>`,ok:'Upload',fn:()=>{const f=$('#fl').files[0];if(!f)return'Select a file to upload.';c.blobs=c.blobs.filter(b=>b.n!==f.name);c.blobs.push({n:f.name,sz:(f.size/1024).toFixed(1)+' KiB'});toast('Successfully uploaded '+f.name)}};render()},
+ anon:d=>{const a=byId(d.id);a.p.anon=!a.p.anon;if(!a.p.anon)a.p.containers.forEach(c=>c.acc='private');save();toast('Configuration saved');render()},
+ subnet:d=>{const v=byId(d.id);M={title:'Add subnet',v:{nm:'',pfx:'',nsg:''},body:()=>`<label>Name</label><input class="fi" data-m="nm" value="${esc(M.v.nm)}"><label>Subnet address range</label><input class="fi" data-m="pfx" value="${esc(M.v.pfx)}" placeholder="10.0.1.0/24"><label>Network security group</label><select class="fi" data-m="nsg"><option value="">None</option>${S.res.filter(r=>r.t==='nsg'&&r.l===v.l).map(r=>`<option ${M.v.nsg===r.n?'selected':''}>${esc(r.n)}</option>`)}</select>`,ok:'Add',fn:()=>{if(!M.v.nm)return'Name is required.';if(!/^\d+\.\d+\.\d+\.\d+\/\d+$/.test(M.v.pfx))return'Enter a valid CIDR such as 10.0.1.0/24.';if(v.p.subnets.some(s=>s.n===M.v.nm))return'Subnet name already exists.';v.p.subnets.push({n:M.v.nm,pfx:M.v.pfx,nsg:M.v.nsg});toast('Added subnet '+M.v.nm)}};render()},
+ power:d=>{const v=byId(d.id);v.p.state='Starting…';render();setTimeout(()=>{v.p.state=d.s;save();render()},900)},
+ ipf:d=>{const v=byId(d.id),p=+($('#ipf').value||0),n=R('nsg',v.p.nsg,v.g);V.ipf=!n?'No NSG attached: all inbound traffic is allowed.':(()=>{const r=evalPort(n,p);return`Access ${r.act==='Allow'?'allowed':'denied'} by security rule <b>${esc(r.n)}</b> in ${esc(n.n)}.`})();V.ipfOk=!n||evalPort(n,p).act==='Allow';V.ipfp=p;render()},
+ tstart:d=>{S.task=d.id;S.last=null;const t=task(d.id);if(!S.res.length||t.seed)reseed(t);save();panel=true;V=t.seed?{p:'rgs0'}:{p:'tasks'};render()},
+ tres:d=>{reseed(task(d.id));S.last=null;save();render()},
+ tchk:d=>{const[ok,m]=task(d.id).ck();S.last={id:d.id,ok,m};if(ok)S.done[d.id]=1;save();render()},
+ tstep:d=>{S.steps[d.id]=!S.steps[d.id];save();render()},tpanel:()=>{panel=!panel;render()},
+ tstop:()=>{S.task=null;S.last=null;save();render()},
+ reset:()=>{M={title:'Reset everything',v:{},body:()=>'<p>This deletes all resources, resource groups and task progress.</p>',ok:'Reset',fn:()=>{S={rgs:[],res:[],done:{},task:null,steps:{},last:null};V={p:'home'}}};render()}};
+A.rgs0=()=>{};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(el&&A[el.dataset.a])A[el.dataset.a](el.dataset,el)});
+document.addEventListener('input',e=>{const el=e.target;if(el.dataset.f){W.f[el.dataset.f]=el.value;if(el.tagName==='SELECT')render()}else if(el.dataset.m){M.v[el.dataset.m]=el.value;if(el.tagName==='SELECT')render()}else if(el.id==='gs'){}});
+document.addEventListener('change',e=>{if(e.target.id==='gs'){const v=e.target.value.toLowerCase(),k=Object.keys(TY).find(k=>TY[k].pl.toLowerCase().includes(v)&&v);e.target.value='';if(k)go({p:'list',t:k});else if(v.includes('task'))go({p:'tasks'});else if(v)toast('No results for "'+v+'"')}});
+
+/* ---------- CLI ---------- */
+let TL=[{c:'o',t:'Azure CLI simulator. It works on the same resources as the portal. Type "help" to see supported commands.'}],cliOn=false,fc=false,HIST=[],HI=0,PEND=null;
+class E extends Error{}
+const fail=m=>{throw new E(m)};
+const lc=s=>String(s).toLowerCase().replace(/ /g,''),SUB='/subscriptions/00000000-0000-0000-0000-000000000000';
+const tok=s=>(s.match(/"[^"]*"|'[^']*'|\S+/g)||[]).map(x=>x.replace(/^["']|["']$/g,''));
+const AL={'-n':'--name','-g':'--resource-group','-l':'--location','-o':'--output','-f':'--file','-y':'--yes','-c':'--container-name','-h':'--help'},BF=['--yes','--help','--include-default','--generate-ssh-keys'];
+function parse(a){const o={_:[]};for(let i=0;i<a.length;i++){const x=AL[a[i]]||a[i];if(x.startsWith('--')){const n=a[i+1];if(BF.includes(x)||n===undefined||(n.startsWith('-')&&n.length>1&&!/^-\d/.test(n)))o[x]=true;else{o[x]=n;i++}}else o._.push(x)}return o}
+const need=(o,...k)=>{const m=k.filter(x=>o[x]===undefined||o[x]===true);if(m.length)fail('az: error: the following arguments are required: '+m.join(', '))};
+const rgOf=n=>S.rgs.find(r=>r.n===n)||fail(`(ResourceGroupNotFound) Resource group '${n}' could not be found.`);
+const locOf=x=>LOC.find(l=>lc(l)===lc(x))||fail(`(InvalidLocation) The provided location '${x}' is not available. Try: ${LOC.map(lc).join(', ')}`);
+const rid=r=>`${SUB}/resourceGroups/${r.g}/providers/${TY[r.t].pr}/${r.n}`;
+const getR=(t,o)=>{need(o,'--name','--resource-group');rgOf(o['--resource-group']);return R(t,o['--name'],o['--resource-group'])||fail(`(ResourceNotFound) The Resource '${TY[t].pr}/${o['--name']}' under resource group '${o['--resource-group']}' was not found.`)};
+const stg=o=>{need(o,'--account-name');return S.res.find(r=>r.t==='storage'&&r.n===o['--account-name'])||fail(`The storage account '${o['--account-name']}' was not found. List accounts with: az storage account list`)};
+const cnt=(a,o,k)=>{need(o,k);return a.p.containers.find(c=>c.n===o[k])||fail('The specified container does not exist. ErrorCode:ContainerNotFound')};
+const ruleJ=(n,x)=>({name:x.n,priority:x.pri,access:x.act,protocol:x.proto==='Any'?'*':x.proto[0]+x.proto.slice(1).toLowerCase(),direction:'Inbound',sourceAddressPrefix:x.src==='Any'?'*':x.sv,destinationPortRange:x.port,provisioningState:'Succeeded',resourceGroup:n.g});
+const J=(t,r)=>t==='rg'?{id:`${SUB}/resourceGroups/${r.n}`,location:lc(r.l),name:r.n,properties:{provisioningState:'Succeeded'},type:TY.rg.pr}:{id:rid(r),location:lc(r.l),name:r.n,resourceGroup:r.g,type:TY[t].pr,provisioningState:'Succeeded',...({storage:()=>({kind:'StorageV2',sku:{name:r.p.perf+'_'+r.p.red},accessTier:r.p.tier,allowBlobPublicAccess:r.p.anon}),nsg:()=>({securityRules:r.p.rules.map(x=>ruleJ(r,x))}),vnet:()=>({addressSpace:{addressPrefixes:[r.p.space]},subnets:r.p.subnets.map(s=>({name:s.n,addressPrefix:s.pfx,networkSecurityGroup:s.nsg||null}))}),vm:()=>({hardwareProfile:{vmSize:r.p.size},powerState:r.p.state==='Running'?'VM running':'VM deallocated',publicIpAddress:r.p.ip,adminUsername:r.p.user,networkProfile:{virtualNetwork:r.p.vnet,networkSecurityGroup:r.p.nsg||null}})}[t])()};
+const jo=x=>JSON.stringify(x,null,2),COLS={rg:['name','location'],storage:['name','resourceGroup','location','accessTier'],nsg:['name','resourceGroup','location'],vnet:['name','resourceGroup','location'],vm:['name','resourceGroup','location','powerState']};
+const tbl=a=>{if(!a.length)return'';const k=Object.keys(a[0]),w=k.map(c=>Math.max(c.length,...a.map(r=>String(r[c]??'').length))),l=r=>k.map((c,i)=>String(r[c]??'').padEnd(w[i])).join('  ').trimEnd();return[l(Object.fromEntries(k.map(c=>[c,c[0].toUpperCase()+c.slice(1)]))),w.map(n=>'-'.repeat(n)).join('  '),...a.map(l)].join('\n')};
+const out=(o,x,cols)=>o['--output']==='table'?tbl(x.map(r=>Object.fromEntries(cols.map(c=>[c,r[c]])))):jo(x);
+const last=()=>S.res[S.res.length-1],CIDR=/^\d+\.\d+\.\d+\.\d+\/\d+$/;
+const anonChk=(a,acc)=>{if(!['off','blob','container'].includes(acc))fail(`az: error: argument --public-access: invalid choice: '${acc}' (choose from 'blob', 'container', 'off')`);if(!a.p.anon&&acc!=='off')fail('Public access is not permitted on this storage account. ErrorCode:PublicAccessNotPermitted');return acc==='off'?'private':acc};
+const nsgR=o=>{need(o,'--nsg-name','--resource-group');return getR('nsg',{'--name':o['--nsg-name'],'--resource-group':o['--resource-group']})};
+const vnR=o=>{need(o,'--vnet-name','--resource-group');return getR('vnet',{'--name':o['--vnet-name'],'--resource-group':o['--resource-group']})};
+const nsgChk=(o,g)=>{const x=o['--network-security-group'];if(x&&x!==true&&!R('nsg',x,g))fail(`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/${x}' under resource group '${g}' was not found.`);return x===true?'':x};
+function rl(o,upd){const n=nsgR(o);need(o,'--name');const x=n.p.rules.find(r=>r.n===o['--name']);if(upd&&!x)fail(`(SecurityRuleNotFound) Security rule '${o['--name']}' was not found in '${n.n}'.`);if(!upd&&!x)need(o,'--priority');
+ const y=x?{...x}:{n:o['--name'],pri:0,src:'Any',sv:'*',port:'*',proto:'Any',act:'Allow'};if(o['--priority'])y.pri=+o['--priority'];
+ if(!(y.pri>=100&&y.pri<=4096))fail(`(SecurityRuleInvalidPriority) Priority ${y.pri} is invalid. It must be between 100 and 4096.`);
+ if(n.p.rules.some(r=>r.pri===y.pri&&r.n!==y.n))fail(`(SecurityRuleParameterPriorityAlreadyTaken) Priority ${y.pri} is already used by another rule in '${n.n}'.`);
+ const ac=o['--access'];if(ac)y.act=/^allow$/i.test(ac)?'Allow':/^deny$/i.test(ac)?'Deny':fail(`az: error: argument --access: invalid choice: '${ac}' (choose from 'Allow', 'Deny')`);
+ const pr=o['--protocol'];if(pr){const p=pr.toLowerCase();y.proto=p==='*'?'Any':p==='tcp'?'TCP':p==='udp'?'UDP':fail(`az: error: argument --protocol: invalid choice: '${pr}' (choose from '*', 'Tcp', 'Udp')`)}
+ if(o['--direction']&&!/^inbound$/i.test(o['--direction']))fail('This lab supports Inbound rules only.');
+ const s=o['--source-address-prefixes']||o['--source-address-prefix'];if(s&&s!==true){if(s==='*'||/^any$/i.test(s)){y.src='Any';y.sv='*'}else if(['Internet','VirtualNetwork','AzureLoadBalancer'].includes(s)){y.src='Service Tag';y.sv=s}else{y.src='IP Addresses';y.sv=s}}
+ const d=o['--destination-port-ranges']||o['--destination-port-range'];if(d&&d!==true){if(!portOk(d))fail(`(SecurityRuleInvalidPortRange) Port range '${d}' is invalid. Use a port (80), a range (8000-8100), a list (80,443) or *.`);y.port=d}
+ if(x)Object.assign(x,y);else n.p.rules.push(y);return ruleJ(n,y)}
+const CMD={};
+for(const[pre,t]of[['group','rg'],['storage account','storage'],['network nsg','nsg'],['network vnet','vnet'],['vm','vm']]){
+ CMD[pre+' list']=o=>{if(o['--resource-group'])rgOf(o['--resource-group']);return out(o,(t==='rg'?S.rgs:S.res.filter(r=>r.t===t&&(!o['--resource-group']||r.g===o['--resource-group']))).map(r=>J(t,r)),COLS[t])};
+ CMD[pre+' show']=o=>{if(t==='rg'){need(o,'--name');return J('rg',rgOf(o['--name']))}return J(t,getR(t,o))};
+ CMD[pre+' delete']=o=>{if(t==='rg'){need(o,'--name');const n=rgOf(o['--name']).n,f=()=>{S.rgs=S.rgs.filter(r=>r.n!==n);S.res=S.res.filter(r=>r.g!==n);return''};if(o['--yes'])return f();PEND=f;return'Are you sure you want to perform this operation? (y/n): '}const r=getR(t,o);S.res=S.res.filter(x=>x!==r);return''}}
+CMD['group create']=o=>{need(o,'--name','--location');const n=o['--name'],l=locOf(o['--location']);if(!/^[A-Za-z0-9][\w.()-]{0,89}$/.test(n))fail(`(InvalidResourceGroup) Resource group name '${n}' is invalid.`);let g=S.rgs.find(r=>r.n===n);if(g&&g.l!==l)fail(`(InvalidResourceGroupLocation) Invalid resource group location '${lc(l)}'. The Resource group already exists in the location '${lc(g.l)}'.`);if(!g){mkRg(n,l);g=S.rgs[S.rgs.length-1]}return J('rg',g)};
+CMD['group exists']=o=>{need(o,'--name');return String(!!S.rgs.find(r=>r.n===o['--name']))};
+CMD['storage account create']=o=>{need(o,'--name','--resource-group');const n=o['--name'],g=o['--resource-group'],rg=rgOf(g);
+ if(!/^[a-z0-9]{3,24}$/.test(n))fail(`(AccountNameInvalid) ${n} is not a valid storage account name. It must be 3-24 characters, lower-case letters and numbers only.`);
+ const ex=S.res.find(r=>r.t==='storage'&&r.n===n);if(ex){if(ex.g!==g)fail(`(StorageAccountAlreadyTaken) The storage account named ${n} is already taken.`);return J('storage',ex)}
+ const sk=(o['--sku']||'Standard_RAGRS').match(/^(Standard|Premium)_(LRS|GRS|RAGRS|ZRS|GZRS)$/);if(!sk)fail(`(InvalidSku) The sku '${o['--sku']}' is not valid. Example: Standard_LRS.`);
+ mkRes('storage',n,g,o['--location']?locOf(o['--location']):rg.l,{perf:sk[1],red:sk[2],tier:o['--access-tier']||'Hot',anon:o['--allow-blob-public-access']==='true',containers:[]});return J('storage',last())};
+CMD['storage account update']=o=>{const a=getR('storage',o),v=o['--allow-blob-public-access'];if(v!==undefined){a.p.anon=v==='true';if(!a.p.anon)a.p.containers.forEach(c=>c.acc='private')}if(o['--access-tier'])a.p.tier=o['--access-tier'];return J('storage',a)};
+CMD['storage container create']=o=>{const a=stg(o);need(o,'--name');const n=o['--name'];if(!/^[a-z0-9]([a-z0-9]|-(?!-)){1,61}[a-z0-9]$/.test(n))fail('(InvalidResourceName) The specifed resource name contains invalid characters. Use 3-63 lowercase letters, numbers and single hyphens.');const acc=anonChk(a,o['--public-access']||'off');if(a.p.containers.some(c=>c.n===n))return jo({created:false});a.p.containers.push({n,acc,blobs:[]});return jo({created:true})};
+CMD['storage container list']=o=>out(o,stg(o).p.containers.map(c=>({name:c.n,publicAccess:c.acc==='private'?null:c.acc})),['name','publicAccess']);
+CMD['storage container set-permission']=o=>{const a=stg(o),c=cnt(a,o,'--name');c.acc=anonChk(a,o['--public-access']||'off');return jo({etag:'"0x8DC1A2B3C4D5E6F"',lastModified:new Date().toISOString()})};
+CMD['storage blob upload']=o=>{const a=stg(o),c=cnt(a,o,'--container-name');need(o,'--file');const n=o['--name']||String(o['--file']).split(/[\\/]/).pop();c.blobs=c.blobs.filter(b=>b.n!==n);c.blobs.push({n,sz:(1+Math.random()*900|0)+' KiB'});return'Finished[#############################################################]  100.0000%\n'+jo({etag:'"0x8DC1A2B3C4D5E6F"',lastModified:new Date().toISOString()})};
+CMD['storage blob list']=o=>out(o,cnt(stg(o),o,'--container-name').blobs.map(b=>({name:b.n,blobType:'BlockBlob',contentLength:b.sz})),['name','blobType','contentLength']);
+CMD['network nsg create']=o=>{need(o,'--name','--resource-group');const g=o['--resource-group'],rg=rgOf(g);let n=R('nsg',o['--name'],g);if(!n){mkRes('nsg',o['--name'],g,o['--location']?locOf(o['--location']):rg.l,nsgP([]));n=last()}return jo({NewNSG:J('nsg',n)})};
+CMD['network nsg rule create']=o=>jo(rl(o,0));CMD['network nsg rule update']=o=>jo(rl(o,1));
+CMD['network nsg rule list']=o=>{const n=nsgR(o);return out(o,[...n.p.rules,...(o['--include-default']?DEF:[])].sort((a,b)=>a.pri-b.pri).map(x=>ruleJ(n,x)),['name','priority','access','protocol','sourceAddressPrefix','destinationPortRange'])};
+const ruleOf=o=>{const n=nsgR(o);need(o,'--name');return[n,n.p.rules.find(r=>r.n===o['--name'])||fail(`(SecurityRuleNotFound) Security rule '${o['--name']}' was not found in '${n.n}'.`)]};
+CMD['network nsg rule show']=o=>{const[n,x]=ruleOf(o);return ruleJ(n,x)};
+CMD['network nsg rule delete']=o=>{const[n,x]=ruleOf(o);n.p.rules=n.p.rules.filter(r=>r!==x);return''};
+CMD['network vnet create']=o=>{need(o,'--name','--resource-group');const n=o['--name'],g=o['--resource-group'],rg=rgOf(g),sp=o['--address-prefix']||o['--address-prefixes']||'10.0.0.0/16';
+ if(!CIDR.test(sp))fail(`(InvalidCIDRNotation) The address prefix ${sp} is not formatted correctly. Use a CIDR such as 10.0.0.0/16.`);let v=R('vnet',n,g);
+ if(!v){const s=o['--subnet-prefix']||o['--subnet-prefixes']||'10.0.0.0/24';if(!CIDR.test(s))fail(`(InvalidCIDRNotation) The subnet prefix ${s} is not formatted correctly.`);mkRes('vnet',n,g,o['--location']?locOf(o['--location']):rg.l,{space:sp,subnets:o['--subnet-name']?[{n:o['--subnet-name'],pfx:s,nsg:''}]:[]});v=last()}return jo({newVNet:J('vnet',v)})};
+CMD['network vnet subnet create']=o=>{const v=vnR(o);need(o,'--name');const ap=o['--address-prefixes']||o['--address-prefix'];if(!ap)fail('az: error: the following arguments are required: --address-prefixes');if(!CIDR.test(ap))fail(`(InvalidCIDRNotation) The address prefix ${ap} is not formatted correctly.`);if(v.p.subnets.some(s=>s.n===o['--name']))fail(`(Conflict) Subnet '${o['--name']}' already exists.`);const s={n:o['--name'],pfx:ap,nsg:nsgChk(o,v.g)||''};v.p.subnets.push(s);return jo({name:s.n,addressPrefix:s.pfx,networkSecurityGroup:s.nsg||null,provisioningState:'Succeeded'})};
+CMD['network vnet subnet update']=o=>{const v=vnR(o);need(o,'--name');const s=v.p.subnets.find(s=>s.n===o['--name'])||fail(`(ResourceNotFound) Subnet '${o['--name']}' was not found.`);if(o['--network-security-group']!==undefined)s.nsg=nsgChk(o,v.g)||'';return jo({name:s.n,addressPrefix:s.pfx,networkSecurityGroup:s.nsg||null,provisioningState:'Succeeded'})};
+CMD['vm create']=o=>{need(o,'--name','--resource-group','--image');const g=o['--resource-group'],n=o['--name'],rg=rgOf(g);
+ if(!/^[A-Za-z0-9][\w-]{0,63}$/.test(n))fail(`(InvalidParameter) The computer name '${n}' is invalid.`);if(R('vm',n,g))fail(`(Conflict) Virtual machine '${n}' already exists in resource group '${g}'.`);
+ const l=o['--location']?locOf(o['--location']):rg.l,win=/win/i.test(o['--image']);let vn=o['--vnet-name'];
+ if(vn){if(!R('vnet',vn,g))fail(`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/${vn}' under resource group '${g}' was not found.`)}else{vn=n+'VNET';if(!R('vnet',vn,g))mkRes('vnet',vn,g,l,{space:'10.0.0.0/16',subnets:[{n:n+'Subnet',pfx:'10.0.0.0/24',nsg:''}]})}
+ let ns=o['--nsg'];if(ns===undefined)ns=n+'NSG';if(ns===true)ns='';if(ns&&!R('nsg',ns,g))mkRes('nsg',ns,g,l,nsgP([rule(win?'default-allow-rdp':'default-allow-ssh',1000,win?'3389':'22','Allow')]));
+ const p={...vmP(ns,vn),img:win?'Windows Server 2022':'Ubuntu Server 22.04 LTS',size:o['--size']||'Standard_DS1_v2',user:o['--admin-username']||'azureuser'};mkRes('vm',n,g,l,p);
+ return jo({fqdns:'',id:rid(last()),location:lc(l),macAddress:'00-0D-3A-1B-2C-3D',powerState:'VM running',privateIpAddress:'10.0.0.4',publicIpAddress:p.ip,resourceGroup:g,zones:''})};
+for(const[k,s]of[['start','Running'],['deallocate','Stopped (deallocated)'],['stop','Stopped']])CMD['vm '+k]=o=>{getR('vm',o).p.state=s;return''};
+CMD['network watcher test-ip-flow']=o=>{need(o,'--vm','--resource-group','--local');const v=getR('vm',{'--name':o['--vm'],'--resource-group':o['--resource-group']}),port=+String(o['--local']).split(':').pop(),n=R('nsg',v.p.nsg,v.g);if(!n)return jo({access:'Allow',ruleName:null});const r=evalPort(n,port);return jo({access:r.act,ruleName:(r.d?'defaultSecurityRules/':'securityRules/')+r.n})};
+CMD['account show']=()=>jo({environmentName:'AzureCloud',id:SUB.slice(15),name:'Azure subscription 1',state:'Enabled',user:{name:'learner@practice.lab',type:'user'}});
+const HELP=`Supported commands (add -o table to list commands):
+  az group create|list|show|exists|delete
+  az storage account create|list|show|update|delete
+  az storage container create|list|set-permission
+  az storage blob upload|list
+  az network nsg create|list|show|delete
+  az network nsg rule create|update|list|show|delete
+  az network vnet create|list|show|delete
+  az network vnet subnet create|update
+  az vm create|list|show|start|stop|deallocate|delete
+  az network watcher test-ip-flow --vm NAME -g RG --local PORT
+  az account show
+Short flags: -n --name, -g --resource-group, -l --location, -o --output, -y --yes. Use "clear" to clear the screen.`;
+function run(line){TL.push({c:'c',t:line});const t=line.trim();
+ if(PEND){const f=PEND;PEND=null;TL.push({c:'o',t:/^y/i.test(t)?f()||'':'Operation cancelled.'});return}
+ if(!t)return;HIST.push(t);HI=HIST.length;
+ try{if(t==='clear'){TL=[];return}if(t==='help'||t==='az'||t==='az --help'){TL.push({c:'o',t:HELP});return}
+  const a=tok(t);if(a[0]!=='az')fail(`bash: ${a[0]}: command not found. This terminal only runs az commands (type help).`);
+  if(a[1]==='login'){TL.push({c:'o',t:'You are already signed in as learner@practice.lab (simulated).'});return}
+  const o=parse(a.slice(1)),p=o._;let k='';for(let n=Math.min(4,p.length);n>0;n--)if(CMD[p.slice(0,n).join(' ')]){k=p.slice(0,n).join(' ');break}
+  if(!k){const m=Object.keys(CMD).filter(c=>p.length&&c.startsWith(p.join(' ')));if(m.length){TL.push({c:'o',t:'Commands:\n  az '+m.join('\n  az ')});return}fail(`az: '${p[0]||''}' is not in the 'az' command group. Type help to see what is supported.`)}
+  if(o['--help'])throw new E('Run "az '+k+'" without arguments to see which ones are required. Type help for the full list.');
+  if(o['--query'])TL.push({c:'o',t:'WARNING: --query is not supported in this simulator and was ignored.'});
+  const r=CMD[k](o);if(r)TL.push({c:'o',t:typeof r==='string'?r:jo(r)})}catch(e){TL.push({c:'e',t:e instanceof E?(/^az:|^bash:|^Run /.test(e.message)?e.message:'ERROR: '+e.message):'Unexpected error: '+e.message})}}
+const term=()=>`<div class="term"><div id="tl">${TL.map(l=>`<pre class="${l.c}">${l.c==='c'?'<span>learner@azure:~$</span> ':''}${esc(l.t)}</pre>`).join('')}</div><div class="tin"><span>learner@azure:~$</span><input id="ci" autocomplete="off" spellcheck="false" aria-label="Azure CLI input" placeholder="az group list"></div></div>`;
+A.cli=()=>{cliOn=!cliOn;fc=cliOn;render()};A.mode=d=>{S.mode=d.m;render()};
+document.addEventListener('keydown',e=>{const el=e.target;if(el.id!=='ci')return;if(e.key==='Enter'){const v=el.value;el.value='';run(v);render()}else if(e.key==='ArrowUp'&&HI>0){el.value=HIST[--HI];e.preventDefault()}else if(e.key==='ArrowDown'){el.value=HI<HIST.length-1?HIST[++HI]:(HI=HIST.length,'');e.preventDefault()}});
+const CLS={
+t1:['Create the group:','az group create --name rg-learn --location eastus','Confirm it exists:','az group show --name rg-learn','Click Check my work.'],
+t2:['Create the storage account (name must be globally unique):','az storage account create -n stlearn4829 -g rg-learn -l eastus --sku Standard_LRS','Create a private container:','az storage container create --account-name stlearn4829 -n documents --public-access off','Upload a blob (the file is not really read):','az storage blob upload --account-name stlearn4829 --container-name documents --file ./report.pdf --name report.pdf','Verify:','az storage blob list --account-name stlearn4829 -c documents -o table','Click Check my work.'],
+t3:['Create the NSG:','az network nsg create -g rg-learn -n nsg-web -l eastus','Allow HTTPS from anywhere:','az network nsg rule create -g rg-learn --nsg-name nsg-web -n Allow-HTTPS --priority 100 --access Allow --protocol Tcp --destination-port-ranges 443 --source-address-prefixes "*"','Verify:','az network nsg rule list -g rg-learn --nsg-name nsg-web --include-default -o table','Click Check my work.'],
+t4:['See which NSG is attached to the VM (networkProfile):','az vm show -g rg-prod-web -n vm-web-01','Ask Network Watcher about port 80:','az network watcher test-ip-flow -g rg-prod-web --vm vm-web-01 --local 80','List the rules in priority order (lowest number wins):','az network nsg rule list -g rg-prod-web --nsg-name nsg-web-prod -o table','Give Allow-HTTP a number lower than the rule that blocks it:','az network nsg rule update -g rg-prod-web --nsg-name nsg-web-prod -n Allow-HTTP --priority 150','Run test-ip-flow again, then click Check my work.'],
+t5:['List the rules and look at the source of anything on port 22:','az network nsg rule list -g rg-sec --nsg-name nsg-jump -o table','Limit SSH to one address:','az network nsg rule update -g rg-sec --nsg-name nsg-jump -n Allow-SSH --source-address-prefixes 203.0.113.10','Or remove the rule:','az network nsg rule delete -g rg-sec --nsg-name nsg-jump -n Allow-SSH','Click Check my work.'],
+t6:['See the access level of each container:','az storage container list --account-name stinvoices001 -o table','Make invoices private:','az storage container set-permission --account-name stinvoices001 -n invoices --public-access off','Optional hardening for the whole account:','az storage account update -g rg-data -n stinvoices001 --allow-blob-public-access false','Click Check my work.']};
+/* ---------- CREATE WIZARD ---------- */
+function validate(){const f=W.f,t=W.t,e=[],n=f.n.trim();
+ if(t!=='rg'&&f.g==='__new'&&!(f.ng||'').trim())e.push('Resource group: enter a name for the new resource group.');
+ if(!n)e.push('Name: this field is required.');
+ else if(t==='storage'){if(!/^[a-z0-9]{3,24}$/.test(n))e.push('Storage account name must be 3-24 characters, lowercase letters and numbers only.');else if(S.res.some(r=>r.t==='storage'&&r.n===n))e.push('The storage account name "'+n+'" is already taken.')}
+ else if(!/^[A-Za-z0-9][\w.()-]{0,79}$/.test(n))e.push('Name may only contain letters, numbers, _ . - ( ) and must start with a letter or number.');
+ else if(t==='rg'&&S.rgs.some(r=>r.n===n))e.push('Resource group "'+n+'" already exists in this subscription.');
+ else if(t!=='rg'&&S.res.some(r=>r.t===t&&r.n===n&&r.g===(f.g==='__new'?f.ng:f.g)))e.push('A '+TY[t].n.toLowerCase()+' named "'+n+'" already exists in this resource group.');
+ if(t==='vnet'){if(!/^\d+\.\d+\.\d+\.\d+\/\d+$/.test(f.space))e.push('Address space must be a CIDR like 10.0.0.0/16.');if(!/^\d+\.\d+\.\d+\.\d+\/\d+$/.test(f.sp))e.push('Subnet range must be a CIDR like 10.0.0.0/24.');if(!f.sn)e.push('Subnet name is required.')}
+ if(t==='vm'){if(!f.vnet)e.push('Virtual network: create a virtual network first.');if(!f.user)e.push('Administrator username is required.')}
+ return e}
+function finish(){const f=W.f,t=W.t,n=f.n.trim();let g=f.g;
+ if(t==='rg'){mkRg(n,f.l);W.made=n}else{if(g==='__new'){g=f.ng.trim();if(!S.rgs.some(r=>r.n===g))mkRg(g,f.l)}
+  const p={storage:()=>({perf:f.perf,red:f.red,tier:f.tier,anon:false,containers:[]}),nsg:()=>nsgP([]),vnet:()=>({space:f.space,subnets:[{n:f.sn,pfx:f.sp,nsg:''}]}),vm:()=>({...vmP(f.nsg,f.vnet),img:f.img,size:f.size,user:f.user})}[t]();
+  mkRes(t,n,g,f.l,p);W.made=S.res[S.res.length-1].id}save()}
+const sel=(k,o,v,at='data-m')=>`<select class="fi" ${at}="${k}">${o.map(x=>`<option ${x===v?'selected':''}>${esc(x)}</option>`).join('')}</select>`;
+function wizard(){const t=W.t,f=W.f,T=TY[t];
+ if(W.tab===2)return`<h1>${W.dep?'Your deployment is complete':'Deployment is in progress'}</h1><div class="sub">Deployment name: Microsoft.${t}-${f.n}</div><div class="card">${W.dep?`<span class="ok">✔</span> ${esc(f.n)} (${T.pr}) — OK`:`<span class="sp"></span> Creating ${esc(f.n)} (${T.pr})…`}</div>${W.dep?'<button class="p" data-a="goto">Go to resource'+(t==='rg'?' group':'')+'</button>':''}`;
+ const sf=k=>sel(k,[],'',`data-f`);
+ let b='';
+ if(W.tab===0){b=`<h2>Project details</h2><div class="sub">Select the subscription to manage deployed resources and costs.</div><label>Subscription</label><select class="fi"><option>Azure subscription 1</option></select>`;
+  if(t!=='rg')b+=`<label>Resource group</label><select class="fi" data-f="g">${S.rgs.map(r=>`<option ${f.g===r.n?'selected':''}>${esc(r.n)}</option>`).join('')}<option value="__new" ${f.g==='__new'?'selected':''}>(New) Create new…</option></select>${f.g==='__new'?`<label>New resource group name</label><input class="fi" data-f="ng" value="${esc(f.ng||'')}">`:''}`;
+  b+=`<label>${t==='rg'?'Resource group':'Name'}</label><input class="fi" data-f="n" value="${esc(f.n)}"><label>Region</label>${sel('l',LOC,f.l,'data-f')}`;
+  F[t].forEach(([k,lb,ty,x])=>{b+=`<label>${lb}</label>`;if(ty==='sel')b+=sel(k,x,f[k],'data-f');else if(ty==='txt')b+=`<input class="fi" data-f="${k}" value="${esc(f[k])}">`;else{const L=S.res.filter(r=>r.t===(ty==='vn'?'vnet':'nsg'));if(!L.length&&ty==='vn')b+='<div class="er">No virtual networks found. Create one first.</div>';else{if(!f[k]||!L.some(r=>r.n===f[k]))f[k]=ty==='vn'?L[0].n:'';b+=`<select class="fi" data-f="${k}">${ty==='ns'?'<option value="">None</option>':''}${L.map(r=>`<option ${f[k]===r.n?'selected':''}>${esc(r.n)}</option>`).join('')}</select>`}}})}
+ else b=W.errs.length?`<div class="msg e"><b>Validation failed.</b> Required information is missing or not valid.<ul>${W.errs.map(x=>'<li>'+esc(x)+'</li>').join('')}</ul></div>`:`<div class="msg s"><b>Validation passed</b></div><div class="card ess"><span>Resource group</span><span>${esc(f.g==='__new'?f.ng:f.g||'—')}</span><span>Name</span><span>${esc(f.n)}</span><span>Region</span><span>${esc(f.l)}</span>${F[t].map(x=>`<span>${x[1]}</span><span>${esc(f[x[0]]||'None')}</span>`).join('')}</div>`;
+ return`<h1>Create ${T.n.toLowerCase()}</h1><div class="tabs"><a class="${W.tab===0?'on':''}" data-a="tab" data-i="0">Basics</a><a class="${W.tab===1?'on':''}" data-a="tab" data-i="1">Review + create</a></div>${b}<div class="bar" style="margin-top:20px">${W.tab===0?'<button class="p" data-a="tab" data-i="1">Review + create</button>':'<button class="p" data-a="deploy">Create</button><button data-a="tab" data-i="0">&lt; Previous</button>'}</div>`}
+
+/* ---------- PAGES ---------- */
+const lk=(p,o={})=>Object.entries({p,...o}).map(([k,v])=>`data-${k}="${esc(v)}"`).join(' ')+' data-a="go"';
+function home(){const rec=S.res.slice(-5).reverse();return`<h1>Azure services</h1><div class="sub">A local practice portal. Nothing here touches a real subscription.</div><div class="tiles">${Object.entries(TY).map(([k,v])=>`<div class="tile" data-a="cr" data-t="${k}"><i>${v.ic}</i>Create ${v.n.toLowerCase()}</div>`).join('')}</div><h2>Resources</h2>${S.res.length?`<table class="tb"><tr><th>Name</th><th>Type</th><th>Resource group</th></tr>${rec.map(r=>`<tr><td><span class="lk" ${lk('res',{id:r.id,s:'ov'})}>${esc(r.n)}</span></td><td>${TY[r.t].n}</td><td>${esc(r.g)}</td></tr>`).join('')}</table>`:'<div class="card">No resources yet. Start a practice task or create a resource group.</div>'}<div class="bar"><button class="p" ${lk('tasks')}>Practice tasks (${Object.keys(S.done).length}/${TASKS.length} done)</button></div>`}
+function list(t){const T=TY[t],L=t==='rg'?S.rgs:S.res.filter(r=>r.t===t);return`<h1>${T.pl}</h1><div class="sub">Azure subscription 1</div><div class="bar"><button class="p" data-a="cr" data-t="${t}">+ Create</button></div>${L.length?`<table class="tb"><tr><th>Name</th>${t==='rg'?'<th>Resources</th>':'<th>Resource group</th>'}<th>Location</th></tr>${L.map(r=>t==='rg'?`<tr><td><span class="lk" ${lk('rg',{id:r.n})}>${esc(r.n)}</span></td><td>${S.res.filter(x=>x.g===r.n).length}</td><td>${r.l}</td></tr>`:`<tr><td><span class="lk" ${lk('res',{id:r.id,s:'ov'})}>${esc(r.n)}</span></td><td>${esc(r.g)}</td><td>${r.l}</td></tr>`).join('')}</table>`:`<div class="card" style="text-align:center;padding:40px"><h2>No ${T.pl.toLowerCase()} to display</h2><button class="p" data-a="cr" data-t="${t}">Create ${T.n.toLowerCase()}</button></div>`}`}
+function rgPage(){const g=S.rgs.find(r=>r.n===V.id);if(!g)return'<div class="msg e">Resource group not found.</div>';const L=S.res.filter(r=>r.g===g.n);return`<h1>${esc(g.n)}</h1><div class="sub">Resource group</div><div class="bar"><button data-a="cr" data-t="storage">+ Create</button><button class="d" data-a="del" data-t="rg" data-id="${esc(g.n)}">Delete resource group</button></div><div class="card ess"><span>Subscription</span><span>Azure subscription 1</span><span>Location</span><span>${g.l}</span></div><h2>Resources</h2>${L.length?`<table class="tb"><tr><th>Name</th><th>Type</th><th>Location</th></tr>${L.map(r=>`<tr><td><span class="lk" ${lk('res',{id:r.id,s:'ov'})}>${esc(r.n)}</span></td><td>${TY[r.t].n}</td><td>${r.l}</td></tr>`).join('')}</table>`:'<div class="card">This resource group is empty.</div>'}`}
+const MENU={storage:[['ov','Overview'],['ctn','Containers'],['cfg','Configuration']],nsg:[['ov','Overview'],['in','Inbound security rules']],vnet:[['ov','Overview'],['sub','Subnets']],vm:[['ov','Overview'],['net','Networking']]};
+function res(){const r=byId(V.id);if(!r)return'<div class="msg e">Resource not found.</div>';const s=V.s||'ov',p=r.p;let b='';
+ if(s==='ov'){const ex={storage:[['Performance',p.perf],['Replication',p.red],['Access tier',p.tier]],nsg:[['Custom rules',p.rules&&p.rules.length]],vnet:[['Address space',p.space],['Subnets',p.subnets&&p.subnets.length]],vm:[['Status',p.state],['Size',p.size],['Image',p.img],['Public IP',p.ip],['Admin user',p.user]]}[r.t];
+  b=`<div class="ess"><span>Resource group</span><span class="lk" ${lk('rg',{id:r.g})}>${esc(r.g)}</span><span>Location</span><span>${r.l}</span><span>Subscription</span><span>Azure subscription 1</span><span>Resource type</span><span>${TY[r.t].pr}</span>${ex.map(x=>`<span>${x[0]}</span><span>${esc(x[1])}</span>`).join('')}</div>${r.t==='vm'?`<div class="bar"><button data-a="power" data-id="${r.id}" data-s="Running">Start</button><button data-a="power" data-id="${r.id}" data-s="Stopped (deallocated)">Stop</button><button data-a="power" data-id="${r.id}" data-s="Running">Restart</button></div>`:''}`}
+ else if(s==='in'){b=`<h2>Inbound security rules</h2><div class="bar"><button class="p" data-a="rule" data-id="${r.id}">+ Add</button></div><table class="tb"><tr><th>Priority</th><th>Name</th><th>Port</th><th>Protocol</th><th>Source</th><th>Action</th><th></th></tr>${allRules(r).map(x=>`<tr class="${x.d?'dm':''}"><td>${x.pri}</td><td>${x.d?esc(x.n):`<span class="lk" data-a="rule" data-id="${r.id}" data-n="${esc(x.n)}">${esc(x.n)}</span>`}</td><td>${esc(x.port)}</td><td>${x.proto}</td><td>${x.src==='Any'?'Any':esc(x.sv)}</td><td class="${x.act==='Allow'?'ok':'er'}">${x.act}</td><td>${x.d?'':`<span class="lk" data-a="delrule" data-id="${r.id}" data-n="${esc(x.n)}">Delete</span>`}</td></tr>`).join('')}</table>`}
+ else if(s==='ctn'&&V.c){const c=p.containers.find(c=>c.n===V.c);b=`<h2><span class="lk" ${lk('res',{id:r.id,s:'ctn'})}>Containers</span> / ${esc(c.n)}</h2><div class="bar"><button class="p" data-a="upl" data-id="${r.id}" data-c="${esc(c.n)}">Upload</button><button data-a="acc" data-id="${r.id}" data-c="${esc(c.n)}">Change access level</button></div><div class="sub">Access level: ${c.acc==='private'?'Private (no anonymous access)':c.acc}</div>${c.blobs.length?`<table class="tb"><tr><th>Name</th><th>Access tier</th><th>Blob type</th><th>Size</th></tr>${c.blobs.map(x=>`<tr><td>${esc(x.n)}</td><td>${p.tier}</td><td>Block blob</td><td>${x.sz}</td></tr>`).join('')}</table>`:'<div class="card">No results. Upload a blob to get started.</div>'}`}
+ else if(s==='ctn'){b=`<h2>Containers</h2><div class="bar"><button class="p" data-a="ctn" data-id="${r.id}">+ Container</button></div>${p.containers.length?`<table class="tb"><tr><th>Name</th><th>Anonymous access level</th></tr>${p.containers.map(c=>`<tr><td><span class="lk" ${lk('res',{id:r.id,s:'ctn',c:c.n})}>${esc(c.n)}</span></td><td>${c.acc==='private'?'Private':c.acc[0].toUpperCase()+c.acc.slice(1)}</td></tr>`).join('')}</table>`:'<div class="card">No containers yet. Click + Container.</div>'}`}
+ else if(s==='cfg')b=`<h2>Configuration</h2><label>Allow Blob anonymous access</label><div>${p.anon?'Enabled':'Disabled'} <button data-a="anon" data-id="${r.id}">${p.anon?'Disable':'Enable'}</button></div><div class="sub">When disabled, every container is forced to Private.</div>`;
+ else if(s==='sub')b=`<h2>Subnets</h2><div class="bar"><button class="p" data-a="subnet" data-id="${r.id}">+ Subnet</button></div><table class="tb"><tr><th>Name</th><th>Address range</th><th>NSG</th></tr>${p.subnets.map(x=>`<tr><td>${esc(x.n)}</td><td>${x.pfx}</td><td>${esc(x.nsg||'None')}</td></tr>`).join('')}</table>`;
+ else if(s==='net'){const n=R('nsg',p.nsg,r.g);b=`<h2>Networking</h2><div class="ess"><span>Virtual network</span><span>${esc(p.vnet)}</span><span>Public IP</span><span>${p.ip}</span><span>Network security group</span><span>${n?`<span class="lk" ${lk('res',{id:n.id,s:'in'})}>${esc(n.n)}</span>`:'None'}</span></div><h2>IP flow verify (Network Watcher)</h2><div class="sub">Test whether inbound traffic from the internet reaches this VM.</div><div class="bar"><input id="ipf" class="fi" style="width:140px" type="number" placeholder="Port" value="${V.ipfp||80}"><button class="p" data-a="ipf" data-id="${r.id}">Check</button></div>${V.ipf?`<div class="msg ${V.ipfOk?'s':'e'}">${V.ipf}</div>`:''}`}
+ return`<h1>${esc(r.n)}</h1><div class="sub">${TY[r.t].n}</div><div class="bar"><button class="d" data-a="del" data-t="${r.t}" data-id="${r.id}">Delete</button></div><div class="blade"><div class="menu">${MENU[r.t].map(([k,l])=>`<a class="${s===k?'on':''}" ${lk('res',{id:r.id,s:k})}>${l}</a>`).join('')}</div><div class="in">${b}</div></div>`}
+function tasks(){return`<h1>Practice tasks</h1><div class="sub">Pick a task. Troubleshooting tasks load a broken environment for you to investigate and fix.</div>${TASKS.map(t=>`<div class="card"><div class="bar" style="margin:0;align-items:center"><b>${t.ti}</b><span class="badge">${t.lv}</span>${S.done[t.id]?'<span class="badge d">Completed</span>':''}<button class="p" style="margin-left:auto" data-a="tstart" data-id="${t.id}">${S.task===t.id?'Restart':'Start'}</button></div><div class="sub" style="margin:6px 0 0">${t.sc}</div></div>`).join('')}`}
+function tpanel(){const t=S.task&&task(S.task);if(!t)return'';const o=S.steps[t.id]===undefined?t.lv==='Build':S.steps[t.id],l=S.last&&S.last.id===t.id?S.last:null;return`<aside class="tp"><div class="bar" style="margin:0"><b>${t.ti}</b></div><span class="badge">${t.lv}</span><p>${t.sc}</p><div class="bar"><button data-a="tstep" data-id="${t.id}">${o?'Hide':'Show'} steps</button><button data-a="mode" data-m="${S.mode==='cli'?'portal':'cli'}">Steps: ${S.mode==='cli'?'CLI':'Portal'}</button><button class="p" data-a="tchk" data-id="${t.id}">Check my work</button></div>${o?'<ol>'+(S.mode==='cli'?CLS[t.id]:t.st).map(s=>'<li>'+(s.startsWith('az ')?'<code style="word-break:break-all">'+esc(s)+'</code>':esc(s))+'</li>').join('')+'</ol>':'<div class="sub">Try it yourself first. Open the steps if you get stuck.</div>'}${l?`<div class="msg ${l.ok?'s':'e'}">${l.ok?'✔ ':''}${esc(l.m)}</div>`:''}<div class="bar">${t.seed?`<button data-a="tres" data-id="${t.id}">Reset lab</button>`:''}<button data-a="tstop">Close task</button></div></aside>`}
+const A2=A;A.rgs0=()=>{};
+function render(){if(V.p==='rgs0'){const t=task(S.task);V=t.lab.length?{p:'rg',id:t.lab[0]}:{p:'tasks'}}
+ const pg={home,list:()=>list(V.t),rg:rgPage,res,tasks,create:wizard}[V.p]();
+ const nav=[['home','Home',{p:'home'}],...Object.entries(TY).map(([k,v])=>[k,v.pl,{p:'list',t:k}]),['tasks','Practice tasks',{p:'tasks'}]];
+ const on=k=>V.p==='list'&&V.t===k||V.p===k||(V.p==='res'&&byId(V.id)&&byId(V.id).t===k)||(V.p==='rg'&&k==='rg');
+ const a=document.activeElement,dv=a&&a.id==='ci'?a.value:'',foc=fc||(a&&a.id==='ci');fc=false;
+ $('#app').innerHTML=`<div class="top"><b>Microsoft Azure <span style="font-weight:300">Practice Lab</span></b><input id="gs" list="sv" placeholder="Search resources, services, and docs (G+/)"><datalist id="sv">${Object.values(TY).map(v=>`<option value="${v.pl}">`).join('')}<option value="Practice tasks"></datalist><button data-a="cli">${cliOn?'Close':'Open'} CLI</button><button data-a="tpanel">${panel?'Hide':'Show'} task panel</button><button data-a="reset">Reset all</button></div><div class="body"><nav class="side">${nav.map(([k,l,o])=>`<a class="${on(k)?'on':''}" data-a="go" ${Object.entries(o).map(([x,y])=>`data-${x}="${y}"`).join(' ')}>${l}</a>`).join('')}</nav><div class="mc"><main class="main">${pg}</main>${cliOn?term():''}</div>${panel?tpanel():''}</div>${M?`<div class="ov"><div class="mo" role="dialog"><h2 style="margin-top:0">${M.title}</h2>${M.body()}${M.err?`<div class="msg e">${esc(M.err)}</div>`:''}<div class="bar" style="margin-top:16px"><button class="p" data-a="mok">${M.ok}</button><button data-a="mx">Cancel</button></div></div></div>`:''}`;
+ save();if(cliOn){const tl=$('#tl'),ci=$('#ci');tl.scrollTop=tl.scrollHeight;ci.value=dv;if(foc)ci.focus()}}
+render();
+</script></body></html>
